@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luuynix — IA para Roblox Studio</title>
+<meta name="description" content="Luuynix: a IA que cria scripts em Luau e envia direto para o Roblox Studio.">
+<style>
+:root{--bg:#faf9f5;--sb:#f0eee6;--tx:#29261b;--mu:#73726c;--bd:#e3e0d3;--ac:#c96442;--cd:#fff;--cb:#1f1e1d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#262624;--sb:#1f1e1d;--tx:#f0eee6;--mu:#a3a29b;--bd:#3d3c38;--ac:#d97757;--cd:#30302e;--cb:#141413}}
+:root[data-theme="dark"]{--bg:#262624;--sb:#1f1e1d;--tx:#f0eee6;--mu:#a3a29b;--bd:#3d3c38;--ac:#d97757;--cd:#30302e;--cb:#141413}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{display:flex;height:100%}
+.sb{width:272px;background:var(--sb);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:14px 12px;gap:6px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;font:600 21px/1 ui-serif,Georgia,"Times New Roman",serif;padding:4px 6px 12px}
+.lg{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--ac);color:#fff;font:700 15px/1 ui-serif,Georgia,serif;flex-shrink:0}
+.lg.s{width:26px;height:26px;margin-top:2px}
+.new{border:1px solid var(--bd);background:var(--cd);border-radius:12px;padding:9px 12px;text-align:left;font-weight:500}
+.rc{font-size:12px;color:var(--mu);padding:12px 8px 4px}
+#hist{overflow:auto;min-height:0}
+.hi{display:block;width:100%;border:0;background:none;text-align:left;padding:7px 10px;border-radius:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi:hover,.hi.on{background:var(--bd)}
+.sp{flex:1}
+.ghost{border:1px solid var(--bd);background:transparent;border-radius:10px;padding:8px 12px;display:inline-flex;align-items:center;gap:8px}
+.ghost:hover{background:var(--bd)}
+.us{display:flex;align-items:center;gap:10px;padding:8px 6px;min-width:0}
+.us span:last-child{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.us small{color:var(--mu);overflow:hidden;text-overflow:ellipsis}
+.av{width:32px;height:32px;border-radius:50%;background:var(--tx);color:var(--bg);display:grid;place-items:center;font-weight:600;flex-shrink:0}
+main{flex:1;display:flex;flex-direction:column;min-width:0}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 16px}
+#mdl,#mod,#fx{border:1px solid var(--bd);background:var(--cd);border-radius:10px;padding:7px 10px;max-width:100%}
+.chip{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--ac);color:#fff}
+.dot{width:8px;height:8px;border-radius:50%;background:#b8b5a8;display:inline-block}
+.mn{display:none;border:0;background:none;font-size:20px}
+#msgs{flex:1;overflow:auto;padding:8px 16px 16px}
+.in{max-width:760px;margin:0 auto}
+.wel{max-width:760px;margin:10vh auto 0;text-align:center}
+.wel h1{font:400 clamp(28px,5vw,40px)/1.2 ui-serif,Georgia,"Times New Roman",serif;margin:14px 0 22px}
+.ch{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.ch button{border:1px solid var(--bd);background:var(--cd);border-radius:99px;padding:8px 14px;font-size:14px}
+.ch button:hover{border-color:var(--ac)}
+.u{display:flex;justify-content:flex-end;margin:14px 0}
+.u>div{background:var(--sb);padding:9px 14px;border-radius:16px;max-width:85%}
+.a{display:flex;gap:12px;margin:14px 0}
+.a>div{min-width:0;flex:1}
+.a p{margin:0 0 10px;overflow-wrap:anywhere}
+code{background:var(--sb);padding:1px 6px;border-radius:6px;font-size:.9em}
+.cb{background:var(--cb);border-radius:12px;margin:10px 0;overflow:hidden;color:#eceae0}
+.cbh{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;font-size:12px;color:#a3a29b}
+.cbh button{border:0;background:none;color:#d9d7cc;font-size:12px}
+.ks{background:transparent;color:#d9d7cc;border:1px solid #4a4944;border-radius:6px;font-size:12px;padding:1px 4px}
+img.av{object-fit:cover}
+#acct{display:flex;flex-direction:column;gap:6px}
+.cb pre{margin:0;padding:4px 14px 14px;overflow-x:auto;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.cmp{padding:0 16px 10px}
+.box{max-width:760px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;background:var(--cd);border:1px solid var(--bd);border-radius:24px;padding:10px 10px 10px 18px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.box textarea{flex:1;border:0;outline:0;resize:none;background:transparent;max-height:160px;padding:6px 0}
+#go{width:36px;height:36px;border:0;border-radius:50%;background:var(--ac);color:#fff;font-size:18px}
+#go:disabled{opacity:.4}
+.fn{text-align:center;color:var(--mu);font-size:12px;margin:8px 0 0}
+.mu{color:var(--mu)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px;z-index:20}
+.ov[hidden],.toast[hidden],.chip[hidden]{display:none}
+.md{background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:22px;max-width:760px;width:100%;max-height:88vh;overflow:auto}
+.md h2{font:500 24px ui-serif,Georgia,serif;margin:0 0 8px}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:14px}
+.pc{border:1px solid var(--bd);background:var(--cd);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.pc.hot{border:2px solid var(--ac)}
+.pc h3{margin:0;font-size:16px}
+.pc b{font-size:24px}
+.pc p{margin:0;color:var(--mu);font-size:13px;flex:1}
+.pri{display:block;text-align:center;text-decoration:none;border:0;background:var(--ac);color:#fff;border-radius:12px;padding:10px 14px;font-weight:500;margin-top:8px}
+#qr{background:#fff;padding:10px;border-radius:12px;width:fit-content;margin:12px auto}
+#cc{width:100%;height:84px;border:1px solid var(--bd);border-radius:10px;background:var(--cd);font:12px ui-monospace,monospace;padding:8px;resize:none}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:12px;z-index:30;font-size:14px}
+@media (max-width:760px){
+.sb{position:fixed;inset:0 auto 0 0;z-index:15;transform:translateX(-100%);transition:transform .2s;padding-top:calc(14px + env(safe-area-inset-top,0px));padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.sb.open{transform:none}
+.mn{display:block}
+#st span{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sb" id="sb">
+<div class="brand"><span class="lg">L</span>Luuynix</div>
+<button class="new" id="new">＋ Novo chat</button>
+<div class="rc">Recentes</div>
+<div id="hist"></div>
+<div class="sp"></div>
+<button class="ghost" id="pl">✦ Planos Opus</button>
+<div id="acct"></div>
+</aside>
+<main>
+<header>
+<button class="mn" id="mn" aria-label="Menu">☰</button>
+<select id="mdl" aria-label="Modelo"></select><select id="mod" aria-label="Modo"></select><select id="fx" aria-label="Esperteza"></select>
+<span class="chip" id="own" hidden>Dono · acesso total</span>
+<span class="sp"></span>
+<button class="ghost" id="st"><i class="dot"></i><span>Conectar ao </span>Roblox Studio</button>
+</header>
+<section id="msgs"></section>
+<div class="cmp">
+<div class="box"><textarea id="in" rows="1" placeholder="Peça um script, uma GUI ou um sistema completo…"></textarea><button id="go" aria-label="Enviar">↑</button></div>
+<p class="fn">A Luuynix pode errar. Teste os scripts no Studio antes de publicar. Grátis: 30 mensagens por dia (Estendido conta 2 e Max conta 3).</p>
+</div>
+</main>
+</div>
+<div class="ov" id="ov" hidden><div class="md" id="md"></div></div>
+<div class="toast" id="ts" hidden></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const PIX_KEY='+5583993177868',WA='5583993177868';
+const PLANS=[{id:'w',n:'Opus Semanal',p:14.9,d:'7 dias de Opus 5.5 e Fable 5.2'},{id:'m',n:'Opus Mensal',p:39.9,d:'30 dias, uso intenso',hot:1},{id:'a',n:'Opus Anual',p:349,d:'12 meses pelo melhor preço'}];
+const MODELS=[{id:'claude-haiku-5-5',n:'Haiku 5.5',t:'quick'},{id:'claude-sonnet-5-5',n:'Sonnet 5.5',t:'default'},{id:'claude-opus-5-5',n:'Opus 5.5',t:'complex',paid:1},{id:'claude-fable-5-2',n:'Fable 5.2',t:'complex',paid:1}];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const brl=n=>'R$ '+n.toFixed(2).replace('.',',');
+let chats=[],cur=null,busy=false,sel='claude-sonnet-5-5',ME=null,OWNER=false,mode='c',fx='med';
+const MODES=[{id:'c',n:'Modo: Criar',p:'Modo CRIAR: entregue o sistema completo e pronto para colar no Studio.'},{id:'b',n:'Modo: Corrigir bug',p:'Modo CORRIGIR: ache a causa do erro, explique em poucas linhas e mostre o código corrigido.'},{id:'g',n:'Modo: GUI / UI',p:'Modo GUI: foque em interfaces (ScreenGui, UIListLayout, UDim2) e em responsividade no celular.'},{id:'o',n:'Modo: Otimizar',p:'Modo OTIMIZAR: reduza lag, memória e chamadas desnecessárias e explique os ganhos.'},{id:'e',n:'Modo: Ensinar',p:'Modo ENSINAR: explique passo a passo para iniciantes, com exemplos curtos.'}];
+const EFFORTS=[{id:'low',n:'⚡ Rápido',e:'low'},{id:'med',n:'🎯 Normal',e:'medium'},{id:'high',n:'🧠 Estendido',e:'high'},{id:'max',n:'🚀 Max',e:'high',x:'Pense com o máximo de cuidado: planeje a arquitetura, revise o código linha a linha e procure bugs e exploits antes de responder.'}];
+const EF=()=>EFFORTS.find(x=>x.id===fx);
+const canUse=m=>!m.paid||OWNER||(ME&&ME.opus);
+
+function toast(t){const e=$('#ts');e.textContent=t;e.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>e.hidden=true,2600)}
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(x){}a.remove()}toast('Copiado')}
+function modal(h){$('#md').innerHTML=h;$('#ov').hidden=false}
+function close(){$('#ov').hidden=true}
+
+function md(s){return s.split('```').map((p,i)=>{
+ if(i%2){const n=p.indexOf('\n'),lang=n<0?'':p.slice(0,n).trim(),code=(n<0?p:p.slice(n+1)).replace(/\n$/,'');
+  return '<div class="cb"><div class="cbh"><span>'+esc(lang||'lua')+'</span><span>'+ks(code)+' <button data-push>Enviar ao Studio</button> <button data-copy>Copiar</button></span></div><pre>'+esc(code)+'</pre></div>'}
+ return p.trim()?'<p>'+esc(p.trim()).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\n/g,'<br>')+'</p>':''}).join('')}
+
+function fillModels(){$('#mod').innerHTML=MODES.map(m=>'<option value="'+m.id+'"'+(m.id===mode?' selected':'')+'>'+m.n+'</option>').join('');$('#fx').innerHTML=EFFORTS.map(f=>'<option value="'+f.id+'"'+(f.id===fx?' selected':'')+'>'+f.n+(!f.paid||OWNER?'':' 🔒')+'</option>').join('');$('#mdl').innerHTML=MODELS.map(m=>'<option value="'+m.id+'"'+(m.id===sel?' selected':'')+'>'+m.n+(canUse(m)?'':' 🔒')+'</option>').join('')}
+let CID='';
+function acct(){
+ const el=$('#acct');
+ if(ME){const pl=ME.owner?'Dono · acesso total':ME.opus?'Opus até '+new Date(ME.planUntil).toLocaleDateString('pt-BR'):'Plano grátis';
+  el.innerHTML='<div class="us">'+(ME.picture?'<img class="av" src="'+esc(ME.picture)+'" alt="" referrerpolicy="no-referrer">':'<span class="av">'+esc((ME.name||'?')[0].toUpperCase())+'</span>')+'<span><b>'+esc(ME.name||'Minha conta')+'</b><small>'+pl+'</small></span></div>'+(ME.owner?'<button class="ghost" id="adm">⚙ Painel do dono</button>':'')+'<button class="ghost" id="lo">Sair</button>'}
+ else{el.innerHTML='<div id="gb"></div>';gbtn()}
+ $('#own').hidden=!(ME&&ME.owner);fillModels();draw()}
+function setMe(m){ME=m;OWNER=!!(m&&m.owner);acct()}
+function gbtn(){
+ const b=$('#gb');if(!b)return;
+ if(!CID){b.innerHTML='<span class="mu">Login Google não configurado.</span>';return}
+ if(!(window.google&&google.accounts&&google.accounts.id)){setTimeout(gbtn,400);return}
+ google.accounts.id.initialize({client_id:CID,callback:async r=>{
+  try{const x=await fetch('/api/auth/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({credential:r.credential})});if(!x.ok)throw 0;setMe(await x.json());toast('Login feito')}catch(e){toast('Falha no login com Google')}}});
+ google.accounts.id.renderButton(b,{theme:'outline',size:'large',shape:'pill',text:'signin_with',locale:'pt-BR'})}
+async function logout(){
+ try{await fetch('/api/auth/logout',{method:'POST'})}catch(e){}
+ ME=null;OWNER=false;chats=[];cur=null;studioCode='';
+ try{localStorage.removeItem('lx');localStorage.removeItem('lxc')}catch(e){}
+ acct()}
+function store(){try{localStorage.setItem('lx',JSON.stringify(chats.slice(0,30)))}catch(e){}}
+
+function draw(){
+ $('#hist').innerHTML=chats.map(c=>'<button class="hi'+(c===cur?' on':'')+'" data-id="'+c.id+'">'+esc(c.t)+'</button>').join('');
+ const box=$('#msgs');
+ if(!cur||!cur.m.length){
+  const nm=ME&&ME.name?ME.name.split(' ')[0]:'criador';
+  box.innerHTML='<div class="wel"><span class="lg" style="width:44px;height:44px;font-size:24px;border-radius:14px">L</span><h1>Olá, '+esc(nm)+'. Qual será o próximo script?</h1><div class="ch">'+['Sistema de loja com GUI','DataStore para salvar moedas','Sistema de combate com RemoteEvent','Corrigir erro no meu script'].map(t=>'<button data-s="'+t+'">'+t+'</button>').join('')+'</div>'+(ME?'':'<p class="mu" style="margin-top:20px">Entre com Google na barra lateral para começar. É grátis.</p>')+'</div>';return}
+ box.innerHTML='<div class="in">'+cur.m.map(m=>m.role==='user'?'<div class="u"><div>'+esc(m.content).replace(/\n/g,'<br>')+'</div></div>':'<div class="a"><span class="lg s">L</span><div>'+(md(m.content)||'<span class="mu">Pensando…</span>')+'</div></div>').join('')+'</div>';
+ box.scrollTop=box.scrollHeight}
+
+async function send(t){
+ t=(t||$('#in').value).trim();if(!t||busy)return;
+ if(!ME){toast('Entre com Google para conversar');return}
+ const m=MODELS.find(x=>x.id===sel);if(!canUse(m)){plans();return}
+ if(!cur){cur={id:Date.now(),t:t.slice(0,40),m:[]};chats.unshift(cur)}
+ const a={role:'assistant',content:''};cur.m.push({role:'user',content:t},a);
+ $('#in').value='';$('#in').style.height='auto';busy=true;$('#go').disabled=true;draw();
+ const msgs=cur.m.slice(0,-1).map(x=>({role:x.role,content:x.content}));
+ try{
+  const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:m.id,mode,effort:fx,messages:msgs})});
+  if(!r.ok){a.content=r.status===401?'Sua sessão expirou. Entre com Google de novo.':(await r.text())||'Erro ao responder.';if(r.status===401){ME=null;acct()}}
+  else{const rd=r.body.getReader(),dc=new TextDecoder();for(;;){const {done,value}=await rd.read();if(done)break;a.content+=dc.decode(value,{stream:true});draw()}}
+ }catch(e){a.content='Sem conexão com o servidor. Tente de novo.'}
+ busy=false;$('#go').disabled=false;draw();store()}
+
+function plans(){modal('<h2>Planos Luuynix</h2><p class="mu">Desbloqueie o Opus 5.5 e o Fable 5.2 para projetos grandes de Roblox.</p><div class="pg"><div class="pc"><h3>Grátis</h3><b>R$ 0</b><p>Haiku 5.5 e Sonnet 5.5, com os modos Estendido e Max também grátis</p></div>'+PLANS.map(p=>'<div class="pc'+(p.hot?' hot':'')+'"><h3>'+p.n+'</h3><b>'+brl(p.p)+'</b><p>'+p.d+'</p><button class="pri" data-pay="'+p.id+'">Pagar com Pix</button></div>').join('')+'</div>')}
+
+function tlv(i,v){return i+String(v.length).padStart(2,'0')+v}
+function crc(s){let c=0xFFFF;for(let i=0;i<s.length;i++){c^=s.charCodeAt(i)<<8;for(let j=0;j<8;j++)c=c&0x8000?((c<<1)^0x1021)&0xFFFF:(c<<1)&0xFFFF}return c.toString(16).toUpperCase().padStart(4,'0')}
+function brcode(v){const b=tlv('00','01')+tlv('26',tlv('00','br.gov.bcb.pix')+tlv('01',PIX_KEY))+tlv('52','0000')+tlv('53','986')+tlv('54',v.toFixed(2))+tlv('58','BR')+tlv('59','LUUYNIX')+tlv('60','BRASIL')+tlv('62',tlv('05','***'))+'6304';return b+crc(b)}
+function pay(id){if(!ME){toast('Entre com Google antes de assinar');return}
+ const p=PLANS.find(x=>x.id===id),code=brcode(p.p),msg='Paguei o plano '+p.n+' ('+brl(p.p)+'). E-mail da conta: '+(ME?ME.email:'(informe aqui)');
+ modal('<h2>'+p.n+' · '+brl(p.p)+'</h2><p class="mu">Escaneie o QR Code ou use o Pix copia e cola.</p><div id="qr"></div><textarea id="cc" readonly>'+code+'</textarea><button class="pri" style="width:100%;border:0" data-copy-pix>Copiar Pix copia e cola</button><p class="mu">Chave Pix (celular): 83993177868</p><a class="pri" data-order="'+p.id+'" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent(msg)+'">Já paguei · enviar comprovante</a><p class="mu">O Opus é liberado depois que o pagamento for confirmado.</p>');
+ if(window.QRCode)new QRCode($('#qr'),{text:code,width:176,height:176})}
+
+function ks(c){const g=/LocalPlayer|PlayerGui|UserInputService|OnClientEvent/.test(c)?'LocalScript':/\nreturn\s+\w+\s*$/.test(c.trim())?'ModuleScript':'Script';return '<select class="ks" aria-label="Tipo de script">'+['Script','LocalScript','ModuleScript'].map(k=>'<option'+(k===g?' selected':'')+'>'+k+'</option>').join('')+'</select>'}
+let studioCode='',stT=0;try{studioCode=localStorage.getItem('lxc')||''}catch(e){}
+async function newCode(){try{const r=await fetch('/api/studio/code',{method:'POST'});studioCode=(await r.json()).code;localStorage.setItem('lxc',studioCode)}catch(e){toast('Erro ao gerar o código')}}
+async function studio(){if(!ME){toast('Entre com Google primeiro');return}if(!studioCode)await newCode();showStudio()}
+function showStudio(){
+ modal('<h2>Conectar ao Roblox Studio</h2><p><i class="dot" id="sd"></i> <span id="stx">Verificando…</span></p><p class="mu">Seu código: <b>'+studioCode+'</b></p><ol><li><a class="pri" href="/studio/plugin.lua?code='+studioCode+'" download="Luuynix.lua">Baixar plugin Luuynix.lua</a></li><li>No Studio, aba <b>Plugins → Pasta de plugins</b>: cole o arquivo lá e reinicie o Studio.</li><li>Na primeira vez, o Studio pede permissão para o plugin acessar este site. Aceite.</li><li>Pronto: use <b>Enviar ao Studio</b> em qualquer bloco de código.</li></ol><button class="ghost" id="nc">Gerar novo código</button>');
+ clearInterval(stT);
+ const chk=async()=>{if($('#ov').hidden||!$('#stx')){clearInterval(stT);return}
+  try{const j=await(await fetch('/api/studio/status?code='+studioCode)).json();$('#stx').textContent=j.connected?'Conectado ao Studio':'Aguardando o plugin…';$('#sd').style.background=j.connected?'#3aa76d':'#b8b5a8';const d=$('#st .dot');if(d)d.style.background=j.connected?'#3aa76d':'#b8b5a8'}catch(e){}};
+ chk();stT=setInterval(chk,3000)}
+async function push(btn){
+ if(!studioCode){studio();return}
+ const cb=btn.closest('.cb'),kind=cb.querySelector('.ks').value;
+ try{const r=await fetch('/api/studio/push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:studioCode,kind,name:'Luuynix'+kind,source:cb.querySelector('pre').textContent})});toast(r.ok?'Enviado ao Studio':(await r.text())||'Falha ao enviar')}catch(e){toast('Falha ao enviar')}}
+function order(id){fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:id})}).then(r=>toast(r.ok?'Pedido registrado. Envie o comprovante.':'Não foi possível registrar o pedido'))}
+async function admin(){
+ try{const o=await(await fetch('/api/admin/orders')).json();
+  modal('<h2>Painel do dono</h2><p class="mu">Pedidos de Pix. Confira o pagamento no seu banco antes de aprovar.</p>'+(o.length?o.map(x=>'<div class="pc" style="margin:8px 0"><b style="font-size:15px">'+esc(x.name||'')+' · '+esc(x.email)+'</b><p>'+esc(x.planName)+' · '+brl(x.price)+' · '+new Date(x.at).toLocaleString('pt-BR')+' · <b>'+x.status+'</b></p>'+(x.status==='pendente'?'<div><button class="pri" style="display:inline-block;border:0" data-ap="'+x.id+'" data-d="ok">Aprovar</button> <button class="ghost" data-ap="'+x.id+'" data-d="no">Recusar</button></div>':'')+'</div>').join(''):'<p>Nenhum pedido ainda.</p>'))}catch(e){toast('Erro ao carregar os pedidos')}}
+async function decide(id,d){await fetch('/api/admin/orders/'+id+'/'+d,{method:'POST'});admin()}
+
+document.addEventListener('click',e=>{
+ const t=e.target;
+ if(t.id==='ov')close();
+ else if(t.id==='new'){cur=null;draw();$('#sb').classList.remove('open')}
+ else if(t.id==='pl')plans();
+ else if(t.id==='st')studio();
+ else if(t.id==='lo')logout();
+ else if(t.id==='nc')newCode().then(showStudio);
+ else if(t.id==='adm')admin();
+ else if('push' in t.dataset)push(t);
+ else if(t.dataset.ap)decide(t.dataset.ap,t.dataset.d);
+ else if(t.dataset.order)order(t.dataset.order);
+ else if(t.id==='mn')$('#sb').classList.toggle('open');
+ else if(t.id==='go')send();
+ else if(t.dataset.pay)pay(t.dataset.pay);
+ else if(t.dataset.s)send(t.dataset.s);
+ else if(t.dataset.id){cur=chats.find(c=>String(c.id)===t.dataset.id);draw();$('#sb').classList.remove('open')}
+ else if('copy' in t.dataset)copy(t.closest('.cb').querySelector('pre').textContent);
+ else if('copyPix' in t.dataset)copy($('#cc').value)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+$('#mdl').addEventListener('change',e=>{const m=MODELS.find(x=>x.id===e.target.value);if(canUse(m))sel=m.id;else{plans();fillModels()}});
+$('#mod').addEventListener('change',e=>{mode=e.target.value});
+$('#fx').addEventListener('change',e=>{const f=EFFORTS.find(x=>x.id===e.target.value);if(!f.paid||OWNER)fx=f.id;else{plans();fillModels()}});
+$('#in').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px'});
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+
+try{chats=JSON.parse(localStorage.getItem('lx')||'[]')}catch(e){}
+fillModels();
+(async()=>{
+ try{CID=(await(await fetch('/api/config')).json()).googleClientId}catch(e){}
+ try{const j=await(await fetch('/api/me')).json();if(j.user)setMe(j.user);else acct()}catch(e){acct()}
+})();
+</script>
+</body>
+</html>
